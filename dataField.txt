@@ -1,0 +1,19 @@
+Disturbance
+_id
+distId
+cycloneName
+stormIdentifier
+priority
+
+Track
+_id
+trackId
+trackType
+trackDataSource
+trackRoute [
+    datetime
+    long
+    lat
+    wdAvg
+    pressure
+]
