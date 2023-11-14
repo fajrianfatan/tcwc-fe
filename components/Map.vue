@@ -100,12 +100,12 @@
       });
 
       // this.map.addLayer({})
-  
+      
       data.map.addSource("contours", {
         type: "vector",
         url: "https://tiles.circlegeo.com/data/indocg.json",
       });
-  
+      
       data.map.addLayer({
         id: "indocg",
         type: "line",
@@ -120,16 +120,16 @@
           "line-width": 1,
         },
       });
-  
-      data.map.addLayer({
-        id: "indocgfill",
-        type: "fill",
-        source: "contours",
-        "source-layer": "indocg",
-        paint: {
-          "fill-color": "rgb(185 185 185)",
-        },
-      });
+      
+      // data.map.addLayer({
+      //   id: "indocgfill",
+      //   type: "fill",
+      //   source: "contours",
+      //   "source-layer": "indocg",
+      //   paint: {
+      //     "fill-color": "rgb(185 185 185)",
+      //   },
+      // });
   
       data.map.addSource("dummy", {
         type: "geojson",
@@ -138,7 +138,7 @@
           features: [],
         },
       });
-  
+      
       data.zIndex.forEach((el) => {
         data.map.addLayer(
           {
@@ -153,7 +153,26 @@
           "indocg"
         );
       });
-  
+
+      data.map.addSource('dark_all', {
+            type: "raster",
+            tiles: ["https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"],
+            tileSize: 256,
+            
+        });
+
+        data.map.addLayer(
+            {
+                id: 'dark_all',
+                type: "raster",
+                source: 'dark_all',
+                paint: {
+                    "raster-fade-duration": 0,
+                    "raster-opacity": 0.9,
+                },
+            }, "indocg"
+        );
+      
       emit("mapready", data.map);
     });
     data.map.on('error', (response) => {

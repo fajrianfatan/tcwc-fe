@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Navbar/>
     <ClientOnly>
       <Map @mapready="mapready" @latlng="getlatlng" />
     </ClientOnly>
@@ -7,6 +8,7 @@
 </template>
 
 <script setup>
+import Navbar from "@/components/Navbar/NavbarDisturbance.vue"
 
 var getlatlng = (ltlng) => {
   
