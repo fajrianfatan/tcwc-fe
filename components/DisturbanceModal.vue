@@ -1,124 +1,66 @@
 <template>
-	<TransitionRoot :show="open">
-		<!-- Dialog -->
-		<Dialog as="div" class="relative z-20" @close="closeModal">
-			<!-- Dialog overlay -->
-			<TransitionChild
-				enter="duration-200"
-				leave="duration-200"
-				enter-from="opacity-0"
-				leave-to="opacity-0"
-			>
-				<div class="fixed inset-0 bg-black/30 backdrop-blur" />
-			</TransitionChild>
-
-			<!-- Full-screen scrollable container -->
-			<div class="fixed inset-0 overflow-y-auto">
-				<!-- Container to center the panel -->
-				<div class="flex items-center justify-center min-h-full p-4">
-					<!-- The actual dialog panel -->
-					<TransitionChild
-						enter="duration-300 ease-out"
-						enter-from="opacity-0 scale-95"
-						enter-to="opacity-100 scale-100"
-						leave="duration-200 ease-in"
-						leave-from="opacity-100 scale-100"
-						leave-to="opacity-0 scale-95"
-					>
-						<DialogPanel class="w-full min-w-[360px] p-5 bg-white shadow-lg rounded-2xl">
-							<div class="flex items-center justify-between">
-								<!-- Conditional rendering for text -->
-								<DialogTitle class="text-xl font-medium text-gray-700"
-									>{{ disturbance._id ? "Update" : "Create" }} Disturbance</DialogTitle
-								>
-							</div>
-							<p class="mt-1 text-sm text-gray-500">
-								{{ disturbance._id ? "Update this disturbance" : "Create a new disturbance here" }}
-							</p>
-
-							<form @submit="submitDisturbance" class="mt-5">
-								<div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-									<div class="col-span-full">
-										<FormInput
-											v-model="disturbance.name"
-											rules="required"
-											label="Name"
-											type="text"
-											name="name"
-											id="disturbance"
-										/>
-									</div>
-								</div>
-								<!-- Form buttons -->
-								<div class="flex items-center justify-end space-x-3 mt-7">
-									<button
-										@click="closeModal()"
-										type="button"
-										class="px-4 text-sm bg-gray-100 py-2.5 rounded-md"
-									>
-										Cancel
-									</button>
-									<button type="submit" class="btn">{{ disturbance._id ? "Update" : "Create" }}</button>
-								</div>
-							</form>
-						</DialogPanel>
-					</TransitionChild>
-				</div>
+	<div class="modal-overlay">
+    <div class="flex items-center justify-center h-screen">
+      <div class="w-[25rem] h-[20rem] bg-gray-200 rounded-tl-[10px] rounded-tr-[10px] flex flex-col">
+        <div class="w-[25rem] h-[2.5rem] bg-emerald-500 rounded-tl-[10px] rounded-tr-[10px] shadow">
+          <div class="ml-4 mt-2 text-white text-sm text-xl text-semibold font-['Poppins']">Create New Disturbance</div>
+        </div>
+	
+		<div class="p-4 flex flex-col flex-grow">
+		  <div class="flex items-center mb-4">
+			<div class="text-black text-base font-['Poppins'] tracking-wide">Disturbance Id</div>
+			<span class="flex-grow"></span>
+			<input class="w-[181px] h-[30px] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text" placeholder="0899_08">
+		  </div>
+	
+		  <div class="flex items-center mb-4">
+			<div class="text-black text-base font-medium font-['Poppins'] tracking-wide">Cyclone Name</div>
+			<span class="flex-grow"></span>
+			<input class="w-[181px] h-[30px] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text" placeholder="TC_ILSA">
+		  </div>
+	
+		  <div class="flex items-center mb-4">
+			<div class="text-black text-base font-medium font-['Poppins'] tracking-wide">Storm Identifier</div>
+			<span class="flex-grow"></span>
+			<input class="w-[181px] h-[30px] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text" placeholder="23 U">
+		  </div>
+	
+		  <div class="flex items-center mb-4">
+			<div class="text-black text-base font-medium font-['Poppins'] tracking-wide">Priority</div>
+			<span class="flex-grow"></span>
+			<input class="w-[181px] h-[30px] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text" placeholder="1">
+		  </div>
+	
+		  <div class="mt-8">
+			<div class="flex justify-end">
+			  <NuxtLink to="/maps" class="w-[6rem] h-[2rem] text-center bg-emerald-500 text-white font-['Poppins'] rounded-[5px]">Create</NuxtLink>
 			</div>
-		</Dialog>
-	</TransitionRoot>
-</template>
-
-<script setup>
-	import {
-		Dialog,
-		DialogPanel,
-		DialogTitle,
-		TransitionRoot,
-		TransitionChild,
-	} from "@headlessui/vue";
-	import { useForm } from "vee-validate";
-
-	// instantiate disturbance store
-	const disturbanceStore = useDisturbanceStore();
-	//Initial form value
-	const disturbance = ref({});
-
-	// Get function used to handle form submission and set init form values
-	const { handleSubmit } = useForm({
-		initialValues: disturbance,
-	});
-
-	// Function used to update or create the record
-	const submitDisturbance = handleSubmit(async (values, ctx) => {
-		if (!disturbance.value._id) {
-			// create disturbance
-			await disturbanceStore.create(values.name);
-			closeModal();
-		} else {
-			// Updated disturbance
-			disturbanceStore.update(disturbance.value._id, values.name);
-			closeModal();
-		}
-	});
-
-	// Control open/close state of modal
-	const open = ref(false);
-	const openModal = (item) => {
-		// Set init values if an object is passed
-		if (item) disturbance.value = JSON.parse(JSON.stringify(item));
-		open.value = true;
-	};
-	const closeModal = () => {
-		disturbance.value = {};
-		open.value = false;
-	};
-
-	// Expose these methods to parent components
-	defineExpose({
-		openModal,
-		closeModal,
-	});
-</script>
-
-<style></style>
+		  </div>
+		</div>
+	  </div>
+	</div>
+	</div>
+  </template>
+  
+  <script>
+  export default {
+	methods: {
+	  closeModal() {
+		this.$emit('closeModal');
+	  },
+	},
+  };
+  </script>
+  
+  <style scoped>
+ .modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  z-index: 999; /* Adjust the z-index to make sure it appears above other elements */
+}
+  </style>
+  

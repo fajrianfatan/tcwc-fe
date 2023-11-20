@@ -28,11 +28,15 @@
     "axios": "^1.6.1",
     "dayjs": "^1.11.10",
     "joi": "^17.11.0",
-    "maplibre-gl": "^3.6.0",
+    "maplibre-gl": "^3.6.1",
     "mongoose": "^8.0.0",
     "nuxt-icon": "^0.6.5",
     "pinia": "^2.1.7",
     "vee-validate": "^4.11.8",
-    "vue3-easy-data-table": "^1.5.47"
+    "vue3-easy-data-table": "^1.5.47",
+    "vuex": "^4.1.0"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }
