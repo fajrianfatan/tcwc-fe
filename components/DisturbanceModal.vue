@@ -33,7 +33,7 @@
 	
 		  <div class="mt-8">
 			<div class="flex justify-end">
-			  <NuxtLink to="/maps" class="w-[6rem] h-[2rem] text-center bg-emerald-500 text-white font-['Poppins'] rounded-[5px]">Create</NuxtLink>
+			  <NuxtLink to="/maps" class="w-[6rem] h-[2rem] flex items-center justify-center bg-emerald-500 text-white font-['Poppins'] rounded-[5px]">Create</NuxtLink>
 			</div>
 		  </div>
 		</div>

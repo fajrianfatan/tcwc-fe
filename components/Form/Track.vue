@@ -44,11 +44,11 @@
         <div class="w-full left-[15px] top-[7.5rem] absolute flex space-x-2">
           <div class="w-[8.5rem]">
             <label for="latitude" class="text-white text-sm font-medium font-['Lato']">Latitude</label>
-            <input :value="latitude" @input="$emit('update:latitude', $event)" type="text" id="latitude" class="w-full p-1 bg-gray-100 rounded-[5px]" />
+            <input :value="props.coordinates.latitude" type="text" id="latitude" class="w-full p-1 bg-gray-100 rounded-[5px]" />
           </div>
           <div class="w-[8.5rem]">
             <label for="longitude" class="text-white text-sm font-medium font-['Lato']">Longitude</label>
-            <input :value="longitude" @input="$emit('update:longitude', $event)" type="text" id="longitude" class="w-full p-1 bg-gray-100 rounded-[5px]" />
+            <input :value="props.coordinates.longitude" type="text" id="longitude" class="w-full p-1 bg-gray-100 rounded-[5px]" />
           </div>
         </div>
 
@@ -132,9 +132,14 @@
 </template>
   
 <script setup>
-import { defineProps, defineEmits } from 'vue';
+import { defineProps } from 'vue';
+const props = defineProps(
+  [
+    'coordinates'
+    
+  ]
+)
+// defineProps(['latitude', 'longitude']);
 
-defineProps(['latitude', 'longitude']);
-const emit = defineEmits(['update:latitude', 'update:longitude']);
 </script>
   

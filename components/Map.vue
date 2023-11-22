@@ -130,14 +130,14 @@
         data.map.on("click", (e) => {
           // console.log(e)
           // Update form data with clicked coordinates
-          formData.x = e.point.x.toFixed(2);
-          formData.y = e.point.y.toFixed(2);
+          // formData.x = e.point.x.toFixed(2);
+          // formData.y = e.point.y.toFixed(2);
           formData.longitude = e.lngLat.lng.toFixed(6);
           formData.latitude = e.lngLat.lat.toFixed(6);
 
         // this.map.addLayer({})
         emit('latlng', { latitude: e.lngLat.lat.toFixed(6), longitude: e.lngLat.lng.toFixed(6) });
-
+          // console.log(formData)
       });
         
         data.map.addSource("contours", {
@@ -211,12 +211,12 @@
                   },
               }, "indocg"
           );
-        data.map.on('click', (e) => {
-          document.getElementById('info').innerHTML = `
-            ${JSON.stringify(e.point)}<br />
-            ${JSON.stringify(e.lngLat.wrap())}
-          `;
-        });
+        // data.map.on('click', (e) => {
+        //   document.getElementById('info').innerHTML = `
+        //     ${JSON.stringify(e.point)}<br />
+        //     ${JSON.stringify(e.lngLat.wrap())}
+        //   `;
+        // });
         
         emit("mapready", data.map);
       });
@@ -245,19 +245,7 @@
       color: #222;
       background: #fff;
     }
-    .form-box {
-    position: absolute;
-    top: 100px;
-    right: 10px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    background: #fff;
-    }
-
-    .form-group {
-      margin-bottom: 10px;
-    }
+    
     @media screen and (max-width: 400px) {
       .map-height {
         height: 100vh;

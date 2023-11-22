@@ -1,25 +1,31 @@
 <template>
   <div>
-    <Navbar/>
+    <Navbar />
     <ClientOnly>
       <div class="absolute top-50 left-0 w-[10rem] z-10">
-      <TrackType/>
+        <TrackType :coordinates="coordinates" />
       </div>
-      <Map @mapready="mapready" @latlng="getlatlng" />
+      <Map @latlng="getlatlng" />
     </ClientOnly>
-    
   </div>
 </template>
 
 <script setup>
-import Navbar from "@/components/Navbar/Navbar.vue"
-import TrackType from "@/components/Form/Track.vue"
+import Navbar from "@/components/Navbar/Navbar.vue";
+import TrackType from "@/components/Form/Track.vue";
 
-var getlatlng = (ltlng) => {
+const coordinates = reactive({
+  latitude: "",
+  longitude: "",
+});
+
+const getlatlng = (ltlng) => {
+  coordinates.latitude = ltlng.latitude;
+  coordinates.longitude = ltlng.longitude;
   
-}
+};
 
-var mapready = (map) => {
 
-}
+
+const mapready = (map) => {};
 </script>
