@@ -6,7 +6,6 @@
 </template>
   
   <script>
-  import { ref } from 'vue';
 
   export default {
     data() {
@@ -129,9 +128,6 @@
       data.map.on("load", async () => {
         data.map.on("click", (e) => {
           // console.log(e)
-          // Update form data with clicked coordinates
-          // formData.x = e.point.x.toFixed(2);
-          // formData.y = e.point.y.toFixed(2);
           formData.longitude = e.lngLat.lng.toFixed(6);
           formData.latitude = e.lngLat.lat.toFixed(6);
 
@@ -197,7 +193,6 @@
               type: "raster",
               tiles: ["https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"],
               tileSize: 256,
-              
           });
 
           data.map.addLayer(
@@ -211,12 +206,6 @@
                   },
               }, "indocg"
           );
-        // data.map.on('click', (e) => {
-        //   document.getElementById('info').innerHTML = `
-        //     ${JSON.stringify(e.point)}<br />
-        //     ${JSON.stringify(e.lngLat.wrap())}
-        //   `;
-        // });
         
         emit("mapready", data.map);
       });
@@ -229,21 +218,6 @@
   <style scoped>
     .map-height {
       height: 100vh;
-    }
-
-    .info-box {
-      display: block;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 400px;
-      padding: 10px;
-      border: none;
-      border-radius: 3px;
-      font-size: 12px;
-      text-align: left;
-      color: #222;
-      background: #fff;
     }
     
     @media screen and (max-width: 400px) {

@@ -23,6 +23,9 @@ module.exports = {
           'semi-dark': '',
           'tcwc-sub': '#33515D',
           'btn-submit': '#31B287',
+        },
+        fontFamily: {
+          'poppins': ['Poppins'],
         }
       }
     },

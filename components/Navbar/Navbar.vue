@@ -1,6 +1,6 @@
 <template>
   <div class="heading">
-  <nav class="bg-white border-gray-200 dark:bg-gray-800">
+  <nav class="bg-dark border-gray-200">
     <div class="max-w-screen-full flex flex-wrap items-center justify-between mx-3 p-4">
       <div class="flex items-center space-x-4">
         <div class="flex flex-col">
@@ -15,7 +15,7 @@
       <div class="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
         <button type="button" class="flex text-sm bg-gray-900 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
           <span class="sr-only">Open user menu</span>
-          <img class="w-8 h-8 rounded-full" src="/docs/images/people/profile-picture-3.jpg" alt="user photo">
+          <img class="w-8 h-8 rounded-full" src="/profile-pic.jpg" alt="user photo">
         </button>
         <!-- Dropdown menu -->
         <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" id="user-dropdown">
@@ -43,15 +43,15 @@
           <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 1h15M1 7h15M1 13h15"/>
           </svg>
-      </button>
+        </button>
     </div>
     <div class="items-center mr-24 justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-        <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-10 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-800 dark:border-gray-700">
+        <ul class="flex flex-col font-medium p-4 md:p-0 mt-4 border md:space-x-10 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 bg-dark">
           <li>
             <NuxtLink
               to="/disturbance"
-              class="block py-2 px-3 rounded"
-              :class="{ 'bg-slate-500 text-white': $route.path === '/disturbance', 'md:hover:bg-slate-500 md:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:text-blue-500': $route.path === '/disturbance', 'dark:text-white': $route.path !== '/disturbance' }"
+              class="block py-2 px-3 rounded-[10px] text-white hover:bg-darkest"
+              :class="{ 'bg-slate-800': $route.path.startsWith('/disturbance') }"
               aria-current="page"
               exact
             >
@@ -61,8 +61,8 @@
           <li>
             <NuxtLink
               to="/maps"
-              class="block py-2 px-3 rounded hover:bg-gray-100"
-              :class="{ 'bg-slate-500 text-white': $route.path === '/maps', 'md:hover:bg-slate-500 md:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:text-blue-500': $route.path === '/maps', 'dark:text-white': $route.path !== '/maps' }"
+              class="block py-2 px-3 rounded-[10px] text-white hover:bg-darkest"
+              :class="{ 'bg-slate-800': $route.path.startsWith('/maps') }"
               exact
             >
               Maps
@@ -77,7 +77,5 @@
 </template>
 
 <script>
-export default {
-  name: 'NavbarMaps'
-}
+
 </script>
