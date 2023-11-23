@@ -26,18 +26,19 @@
     <div class="w-32 absolute inset-x-2/3 inset-y-1/3 flex flex-col items-center">
       <div class="left-[2px] top-0 absolute text-white text-3xl font-medium font-poppins">Sign in</div>
       <div class="w-[431px] h-[285px] left-0 top-[68px] absolute">
+        <form @submit.prevent="handleLogin">
         <div class="w-[431px] h-[177px] left- top-0 absolute">
-          <div class="w-[429px] h-16 left-[2px] top-0 absolute flex-col justify-start items-start inline-flex">
+          <div class="w-[429px] h-16 left-[2px] top-0 absolute flex-col justify-start items-start inline-flex" @keyup.enter="handleLogin">
             <div class="text-white text-lg font-poppins">Email</div>
-            <input v-model="email" type="email" class="text-white text-lg font-poppins bg-transparent border-none focus:outline-none w-full" placeholder="email@bmkg.go.id"/>
+            <input v-model="email" type="email" class="text-white text-lg font-poppins bg-transparent outline-transparent border-none focus:outline-none rounded-[10px] w-full" placeholder="email@bmkg.go.id"/>
             <div class="w-[17px] h-[17px] relative origin-top-left rotate-180"></div>
-            <div class="w-[429px] h-0.5 bg-white"></div>
+            <div class="w-[429px] h-0.5 left-[2px] top-[62px] absolute bg-white"></div>
           </div>
-          <div class="w-[431px] h-16 left- top-[113px] absolute">
+          <div class="w-[431px] h-16 left- top-[113px] absolute flex-col justify-start items-start inline-flex">
             <div class="left-[2px] top-0 absolute text-white text-lg font-poppins">Password</div>
             <div class="w-[429px] h-0.5 left-[2px] top-[62px] absolute bg-white"></div>
-            <div class="w-[187px] h-6 left-0 top-[31px] absolute">
-              <input v-model="password" type="password" class="text-white text-base text-lg font-poppins bg-transparent border-none focus:outline-none w-full" placeholder="************"/>
+            <div class="w-[429px] h-6 left-0 top-[31px] absolute">
+              <input v-model="password" type="password" class="text-white text-lg font-poppins bg-transparent border-none focus:outline-none rounded-[10px] w-full" placeholder="************"/>
               <div class="w-[17px] h-[17px] left-0 top-[2px] absolute flex-col justify-start items-start inline-flex"></div>
             </div>
             <div class="w-3.5 h-3.5 left-[417px] top-[39px] absolute">
@@ -46,12 +47,12 @@
           </div>
         </div>
         <div class="w-[429px] h-[53px] left-[2px] top-[232px] absolute">
-          <div class="w-[429px] h-[53px] left-0 top-0 absolute bg-btn-submit rounded-[32px] shadow"
-          @click="handleLogin"></div>
-          <button class="left-[192px] top-[14px] absolute text-white text-[17px] font-medium font-poppins">
+          <button class="w-[429px] h-[53px] left-0 top-0 bg-btn-submit rounded-[32px] shadow absolute text-white text-[17px] font-medium font-poppins"
+          type="submit">
             Login
           </button>
         </div>
+      </form>
       </div>
     </div>
     </div>

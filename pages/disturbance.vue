@@ -2,9 +2,10 @@
     <div>
       <Navbar/>
 	  <div class="w-full h-full">
-		<div class="w-[15rem] h-[3rem] ml-12 top-[10.5rem] absolute bg-emerald-500 rounded-[32px] shadow justify-center items-center gap-2.5 inline-flex">
-			<a href="#" class="text-white text-base font-medium font-poppins" @click="isModalOpen = true">Add New Disturbance</a>
-		</div>
+		<button class="w-[15rem] h-[3rem] ml-12 top-[10.5rem] absolute text-white text-base font-medium font-poppins bg-emerald-500 rounded-[32px] shadow justify-center items-center gap-2.5 inline-flex"
+		@click="isModalOpen = true">
+		Add New Disturbance
+		</button>
 		<div class="w-6 h-6 left-[1324px] top-[325px] absolute" />
 		<div class="w-6 h-6 left-[1289px] top-[325px] absolute">
 			<div class="w-[17px] h-[17px] left-[4px] top-[3px] absolute">
@@ -106,8 +107,9 @@
 						</td>
 						<td class="px-6 py-4">
 							<div class="flex space-x-4">
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</a>
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</a>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
 							</div>
 						</td>
 					</tr>
@@ -127,8 +129,9 @@
 						</td>
 						<td class="px-6 py-4">
 							<div class="flex space-x-4">
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</a>
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</a>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
 							</div>
 						</td>
 					</tr>
@@ -148,8 +151,9 @@
 						</td>
 						<td class="px-6 py-4">
 							<div class="flex space-x-4">
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</a>
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</a>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
 							</div>
 						</td>
 					</tr>
@@ -169,8 +173,9 @@
 						</td>
 						<td class="px-6 py-4">
 							<div class="flex space-x-4">
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</a>
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</a>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
 							</div>
 						</td>
 					</tr>
@@ -190,8 +195,9 @@
 						</td>
 						<td class="px-6 py-4">
 							<div class="flex space-x-4">
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</a>
-							<a href="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</a>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
 							</div>
 						</td>
 					</tr>

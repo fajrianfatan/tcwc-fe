@@ -1,4 +1,5 @@
 <template>
+	<div v-click-outside="onClickOutside">
 	<div class="modal-overlay">
     <div class="flex items-center justify-center h-screen">
       <div class="w-[25rem] h-[20rem] bg-gray-200 rounded-[10px] flex flex-col">
@@ -40,17 +41,28 @@
 	  </div>
 	</div>
 	</div>
+	</div>
   </template>
   
-  <script>
-  export default {
-	methods: {
-	  closeModal() {
+<script>
+export default {
+methods: {
+	closeModal() {
 		this.$emit('closeModal');
-	  },
-	},
-  };
-  </script>
+},
+	onClickOutside(event, el) {
+		// Accessing event and el in your script
+		console.log('Click event:', event);
+		console.log('Element:', el);
+
+		// You can use these parameters as needed, for example, to check if the click was inside a specific element
+		if (!el.contains(event.target)) {
+		this.closeModal();
+		}
+	}
+},
+};
+</script>
   
   <style scoped>
  .modal-overlay {

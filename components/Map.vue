@@ -56,6 +56,10 @@
   latitude: '',
   });
 
+  const addMarker = (lngLat) => {
+  const marker = new maplibregl.Marker().setLngLat(lngLat).addTo(data.map);
+  };
+
   await nextTick();
 
   var emit = defineEmits(["latlng", "mapready"]);
@@ -134,6 +138,7 @@
         // this.map.addLayer({})
         emit('latlng', { latitude: e.lngLat.lat.toFixed(6), longitude: e.lngLat.lng.toFixed(6) });
           // console.log(formData)
+        addMarker([e.lngLat.lng, e.lngLat.lat]);
       });
         
         data.map.addSource("contours", {

@@ -4,7 +4,7 @@
       <div class="w-[14rem] h-[5.5rem] mt-4 ml-4 relative z-100">
         <div class="w-[14rem] h-[5.5rem] left-0 top-0 absolute bg-slate-800 rounded-[10px]">
           <div class="w-[12rem] mx-auto mt-2">
-            <label for="countries" class="block mb-2 text-sm text-medium text-gray-900 dark:text-white font-poppins">Select Track Type</label>
+            <label for="countries" class="block mb-2 text-base text-gray-900 dark:text-white font-poppins">Select Track Type</label>
             <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option selected>Analysis Track</option>
                 <option>Guidance Forecast Track</option>
@@ -65,28 +65,28 @@
         <div class="w-full left-[15px] top-[7.5rem] absolute flex space-x-2">
           <div class="w-[8.5rem]">
             <label for="latitude" class="text-white text-sm font-medium font-poppins">Latitude</label>
-            <input :value="props.coordinates.latitude" type="text" id="latitude" class="w-full p-1 bg-gray-100 rounded-[10px]" />
+            <input :value="props.coordinates.latitude" type="number" id="latitude" class="w-full p-1 bg-gray-100 rounded-[10px]" />
           </div>
           <div class="w-[8.5rem]">
             <label for="longitude" class="text-white text-sm font-medium font-poppins">Longitude</label>
-            <input :value="props.coordinates.longitude" type="text" id="longitude" class="w-full p-1 bg-gray-100 rounded-[10px]" />
+            <input :value="props.coordinates.longitude" type="number" id="longitude" class="w-full p-1 bg-gray-100 rounded-[10px]" />
           </div>
         </div>
 
         <div class="w-full left-[15px] top-[12rem] absolute flex space-x-2">
           <div class="w-[8.5rem]">
             <label for="pressure" class="text-white text-sm font-medium font-poppins">Pressure</label>
-            <input type="text" id="pressure" class="w-full p-1 bg-gray-100 rounded-[10px]" />
+            <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" min="0" maxlength="4" class="w-full p-1 bg-gray-100 rounded-[10px]" />
           </div>
           <div class="w-[8.5rem]">
             <label for="wind-average" class="text-white text-sm font-medium font-poppins">Wind Average</label>
-            <input type="text" id="wind-average" class="w-full p-1 bg-gray-100 rounded-[10px]" />
+            <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" id="wind-average" min="0" maxlength="6" class="w-full p-1 bg-gray-100 rounded-[10px]" />
           </div>
         </div>
   
         <!-- Submit Button -->
         <div class="w-[143px] h-[38px] mt-4 left-[15px] top-[16.5rem] absolute bg-emerald-500 rounded-[32px] shadow justify-center items-center gap-2.5 inline-flex">
-          <div class="text-white text-sm font-medium font-poppins">Submit</div>
+          <div class="text-white text-sm font-medium font-poppins">Save Track</div>
         </div>
       </div>
       
@@ -117,13 +117,13 @@
         <table class="w-full table-auto text-white">
           <thead>
             <tr>
-              <th class="px-4 py-2 text-center font-poppins">No</th>
-              <th class="px-2 py-2 text-center font-poppins">Longitude</th>
-              <th class="px-4 py-2 text-center font-poppins">Latitude</th>
-              <th class="px-4 py-2 text-center font-poppins">Date Time</th>
-              <th class="px-4 py-2 text-center font-poppins">Wind Average</th>
-              <th class="px-4 py-2 text-center font-poppins">Pressure</th>
-              <th class="px-4 py-2 text-center font-poppins">Action</th>
+              <th class="px-4 py-2 text-sm text-center font-poppins">No</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Longitude</th>
+              <th class="px-4 py-2 text-sm text-center font-poppins">Latitude</th>
+              <th class="px-4 py-2 text-sm text-center font-poppins">Date Time</th>
+              <th class="px-4 py-2 text-sm text-center font-poppins">Wind Average</th>
+              <th class="px-4 py-2 text-sm text-center font-poppins">Pressure</th>
+              <th class="px-4 py-2 text-sm text-center font-poppins">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -161,4 +161,15 @@ const props = defineProps(
 )
 
 </script>
-  
+
+<style scoped>
+input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+  }
+
+  input[type=number] {
+      -moz-appearance: textfield;
+  }
+</style>
