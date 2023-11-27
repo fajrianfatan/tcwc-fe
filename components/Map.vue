@@ -1,7 +1,6 @@
 <template>
   <div class="relative">
     <div id="map" class="w-full map-height"></div>
-    <Track v-bind:latitude="latitude" v-bind:longitude="longitude" v-on:update:latitude="updateLatitude" v-on:update:longitude="updateLongitude" />
   </div>
 </template>
   
@@ -56,17 +55,22 @@
   latitude: '',
   });
 
-  const addMarker = (lngLat) => {
-  const marker = new maplibregl.Marker().setLngLat(lngLat).addTo(data.map);
+  const addMarker = (lngLat, date, pressure, meanWind) => {
+  const marker = new maplibregl.Marker()
+    .setLngLat(lngLat)
+    .setPopup(new maplibregl.Popup().setHTML(`<b>Date:</b> ${date}<br><b>Pressure:</b> ${pressure}<br><b>Mean Wind:</b> ${meanWind}`))
+    .addTo(data.map);
   };
 
   await nextTick();
 
   var emit = defineEmits(["latlng", "mapready"]);
     
-    onMounted(() => {
+    onMounted(async () => {
+    const response = await fetch("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all");
+    const apiData = await response.json();
       data.map = new maplibregl.Map({
-        container: "map", // container id
+        container: "map", 
         attributionControl: false,
         // hash: true,
         center: [113.85, -0.4], // starting position
@@ -211,7 +215,15 @@
                   },
               }, "indocg"
           );
-        
+          const track = apiData.data.docs[0].track;
+
+        // Add markers
+        track.forEach((point) => {
+          const lngLat = { lng: point.geometry.coordinates[0], lat: point.geometry.coordinates[1] };
+          addMarker(lngLat, point.properties.date, point.properties.pressure, point.properties.meanWind);
+        });
+        data.map.addControl(new maplibregl.NavigationControl());
+
         emit("mapready", data.map);
       });
       data.map.on('error', (response) => {

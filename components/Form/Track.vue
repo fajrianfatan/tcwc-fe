@@ -91,12 +91,18 @@
       </div>
       
     </div>
+    
     <div class="z-50 w-full h-full">
+      <button @click="toggleTrackList" class="fixed bottom-4 left-[48rem] transform -translate-x-1/2 bg-emerald-500 text-white rounded-full p-2">
+        {{ showTrackList ? 'Minimize Track List' : 'Maximize Track List' }}
+      </button>
       <!-- Form 1: Select Track Type -->
-      <div class="w-[50rem] h-[18rem] bg-slate-800 rounded-[10px] fixed bottom-4 right-4">
+      <div :class="{ 'hidden': !showTrackList }" class="w-[50rem] h-[18rem] bg-slate-800 rounded-[10px] fixed bottom-4 right-4">
         <!-- Inserted div at the top -->
+        
         <div class="relative">
-    <!-- Existing box -->
+          
+    
           <div class="w-[50rem] h-[3rem] bg-emerald-500 rounded-tl-[10px] rounded-tr-[10px] flex items-center">
             <label class="ml-5 text-white font-sm font-poppins">Track List</label>
             
@@ -104,7 +110,7 @@
             <select class="absolute top-0 right-5 h-full bg-emerald-500 text-white rounded-tr-[10px] rounded-br-[10px] border-none outline-none p-2">
               <option value="001">001</option>
               <option value="002">002</option>
-              <!-- Add more options as needed -->
+              
             </select>
             <div class="absolute top-0 right-2 h-full flex items-center">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-white">
@@ -113,54 +119,133 @@
             </div>
           </div>
         </div>
-        <!-- Table with labels -->
+       
+        <div class="max-h-[15rem] overflow-auto">
         <table class="w-full table-auto text-white">
           <thead>
             <tr>
-              <th class="px-4 py-2 text-sm text-center font-poppins">No</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">No</th>
               <th class="px-2 py-2 text-sm text-center font-poppins">Longitude</th>
-              <th class="px-4 py-2 text-sm text-center font-poppins">Latitude</th>
-              <th class="px-4 py-2 text-sm text-center font-poppins">Date Time</th>
-              <th class="px-4 py-2 text-sm text-center font-poppins">Wind Average</th>
-              <th class="px-4 py-2 text-sm text-center font-poppins">Pressure</th>
-              <th class="px-4 py-2 text-sm text-center font-poppins">Action</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Latitude</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Date</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Time</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Wind Average</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Pressure</th>
+              <th class="px-2 py-2 text-sm text-center font-poppins">Action</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Example row, you can repeat this for each data entry -->
-            <tr>
-              <td class="px-4 py-2 text-center font-poppins">001</td>
-              <td class="px-2 py-2 text-center font-poppins">110.4268N</td>
-              <td class="px-4 py-2 text-center font-poppins">-10.479E</td>
-              <td class="px-4">
-                <input class="h-[1.8rem] rounded-[0.3rem] text-black" type="date">
+            <tr v-for="(track, index) in mappedTracks" :key="track.track_id">
+              <td class="px-2 py-2 text-center font-poppins">{{ index + 1 }}</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.lat }} N</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.lng }} E</td>
+              <td class="px-2">
+                <input class="h-[1.8rem] rounded-[0.3rem] text-black" type="date" :value="formatDate(track.datetime)" />
               </td>
-              <td class="px-4 py-2 text-center font-poppins">35 knots</td>
-              <td class="px-4 py-2 text-center font-poppins">998 mb</td>
-              <td class="px-4 py-2 text-center font-poppins">
-                <!-- Edit & Delete button -->
+              <td class="px-2 py-2 text-center font-poppins">{{ track.time }}</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.windAvg }} kts</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.pressure }} mbar</td>
+              <td class="px-2 py-2 text-center font-poppins">
                 <button class="text-blue-500 hover:text-blue-700 mr-2">Edit</button>
                 <button class="text-red-500 hover:text-red-700">Delete</button>
               </td>
             </tr>
-            <!-- Repeat this block for additional rows -->
           </tbody>
         </table>
       </div>
-      
-      <!-- Repeat similar blocks for additional tables -->
+    </div>
     </div>
 </template>
   
 <script setup>
 import { defineProps } from 'vue';
+const showTrackList = ref(true);
+
+const toggleTrackList = () => {
+  showTrackList.value = !showTrackList.value;
+};
 const props = defineProps(
   [
     'coordinates'   
   ]
 )
 
+
 </script>
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return {
+      isModalOpen: false,
+      tracks: [],
+    };
+  },
+
+  methods: {
+    async fetchTracks() {
+      try {
+        const response = await axios.get('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all/');
+        if (response.data.status === 'OK') {
+          this.tracks = response.data.data.docs;
+        } else {
+          console.error('Error fetching tracks:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
+      }
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      const formattedDate = date.toISOString().split('T')[0];
+      return formattedDate;
+    },
+    extractTime(datetime) {
+      if (!datetime) {
+        return '';
+      }
+      const time = new Date(datetime).toLocaleTimeString('en-US', { hour12: false });
+      return time;
+    },
+  },
+
+  mounted() {
+    this.fetchTracks();
+  },
+
+  computed: {
+  mappedTracks() {
+    const allTracks = [];
+
+    this.tracks.forEach((track, index) => {
+      if (track.track && Array.isArray(track.track) && track.track.length > 0) {
+        track.track.forEach(trackData => {
+          const coordinates = trackData.geometry.coordinates;
+          const datetime = trackData.properties.date;
+
+          allTracks.push({
+            track_id: trackData._id,
+            index: index + 1,
+            lat: coordinates[1],
+            lng: coordinates[0],
+            datetime: trackData.properties.date,
+            time: this.extractTime(datetime),
+            pressure: trackData.properties.pressure,
+            windAvg: trackData.properties.meanWind,
+          });
+        });
+      } else {
+        console.warn('Invalid track:', track);
+      }
+    });
+
+    return allTracks;
+  },
+}
+}
+</script>
+
 
 <style scoped>
 input::-webkit-outer-spin-button,

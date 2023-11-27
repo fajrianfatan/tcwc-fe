@@ -11,8 +11,6 @@
 			<div class="w-[17px] h-[17px] left-[4px] top-[3px] absolute">
 			</div>
 		</div>
-		
-	
 		<div class="relative w-[100rem] mx-auto justify-center top-[10rem] shadow-md rounded-[10px]">
 			<div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-4">
 				<div>
@@ -91,115 +89,26 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-400 hover:bg-gray-50 dark:hover:bg-gray-400">
-						
-						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
-							0899_08
-						</th>
-						<td class="px-6 py-4">
-							TC_ILSA
-						</td>
-						<td class="px-6 py-4">
-							23 U
-						</td>
-						<td class="px-6 py-4">
-							1
-						</td>
-						<td class="px-6 py-4">
-							<div class="flex space-x-4">
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
-							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
-							</div>
-						</td>
-					</tr>
-					<tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-400 hover:bg-gray-50 dark:hover:bg-gray-400">
-						
-						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
-							0899_08
-						</th>
-						<td class="px-6 py-4">
-							TC_ILSA
-						</td>
-						<td class="px-6 py-4">
-							23 U
-						</td>
-						<td class="px-6 py-4">
-							1
-						</td>
-						<td class="px-6 py-4">
-							<div class="flex space-x-4">
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
-							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
-							</div>
-						</td>
-					</tr>
-					<tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-400 hover:bg-gray-50 dark:hover:bg-gray-400">
-						
-						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
-							0899_08
-						</th>
-						<td class="px-6 py-4">
-							TC_ILSA
-						</td>
-						<td class="px-6 py-4">
-							23 U
-						</td>
-						<td class="px-6 py-4">
-							1
-						</td>
-						<td class="px-6 py-4">
-							<div class="flex space-x-4">
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
-							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
-							</div>
-						</td>
-					</tr>
-					<tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-400 hover:bg-gray-50 dark:hover:bg-gray-400">
-						
-						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
-							0899_08
-						</th>
-						<td class="px-6 py-4">
-							TC_ILSA
-						</td>
-						<td class="px-6 py-4">
-							23 U
-						</td>
-						<td class="px-6 py-4">
-							1
-						</td>
-						<td class="px-6 py-4">
-							<div class="flex space-x-4">
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
-							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
-							</div>
-						</td>
-					</tr>
-					<tr class="bg-white border-b dark:bg-gray-100 dark:border-gray-400 hover:bg-gray-50 dark:hover:bg-gray-400">
-						
-						<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
-							0899_08
-						</th>
-						<td class="px-6 py-4">
-							TC_ILSA
-						</td>
-						<td class="px-6 py-4">
-							23 U
-						</td>
-						<td class="px-6 py-4">
-							1
-						</td>
-						<td class="px-6 py-4">
-							<div class="flex space-x-4">
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
-							<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-							<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
-							</div>
-						</td>
+					<tr v-for="disturbance in mappedDisturbances" :key="disturbance.disturbance_id">
+					<th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-black">
+						{{ disturbance.disturbance_id }}
+					</th>
+					<td class="px-6 py-4">
+						{{ disturbance.cyclone_name }}
+					</td>
+					<td class="px-6 py-4">
+						{{ disturbance.storm_identifier }}
+					</td>
+					<td class="px-6 py-4">
+						{{ disturbance.priority }}
+					</td>
+					<td class="px-6 py-4">
+						<div class="flex space-x-4">
+						<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+						<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+						<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
+						</div>
+					</td>
 					</tr>
 				</tbody>
 			</table>
@@ -210,20 +119,48 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Navbar from "@/components/Navbar/Navbar.vue";
 import DisturbanceModal from "~/components/DisturbanceModal.vue";
 
 export default {
-  name: 'App',
+  name: 'Disturbance',
   components: {
     Navbar,
     DisturbanceModal,
   },
   data() {
     return {
-      // Track whether the modal is open or not
       isModalOpen: false,
+      disturbances: [],
     };
+  },
+  methods: {
+    async fetchDisturbances() {
+      try {
+        const response = await axios.get('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all/');
+        if (response.data.status === 'OK') {
+          this.disturbances = response.data.data.docs;
+        } else {
+          console.error('Error fetching disturbances:', response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching disturbances:', error);
+      }
+    },
+  },
+  mounted() {
+    this.fetchDisturbances();
+  },
+  computed: {
+    mappedDisturbances() {
+      return this.disturbances.map(disturbance => ({
+        disturbance_id: disturbance._id,
+        cyclone_name: disturbance.name,
+        storm_identifier: disturbance.area,
+        priority: disturbance.direct_impact ? 1 : 0,
+      }));
+    },
   },
 };
 </script>
