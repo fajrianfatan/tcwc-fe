@@ -58,7 +58,7 @@
   const addMarker = (lngLat, date, pressure, meanWind) => {
   const marker = new maplibregl.Marker()
     .setLngLat(lngLat)
-    .setPopup(new maplibregl.Popup().setHTML(`<b>Date:</b> ${date}<br><b>Pressure:</b> ${pressure}<br><b>Mean Wind:</b> ${meanWind}`))
+    .setPopup(new maplibregl.Popup().setHTML(`<b>Date:</b> ${date}<br><b>Pressure:</b> ${pressure}<br><b>Wind Average:</b> ${meanWind}`))
     .addTo(data.map);
   };
 

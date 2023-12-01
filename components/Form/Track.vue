@@ -98,25 +98,14 @@
       </button>
       <!-- Form 1: Select Track Type -->
       <div :class="{ 'hidden': !showTrackList }" class="w-[50rem] h-[18rem] bg-slate-800 rounded-[10px] fixed bottom-4 right-4">
-        <!-- Inserted div at the top -->
-        
         <div class="relative">
-          
-    
           <div class="w-[50rem] h-[3rem] bg-emerald-500 rounded-tl-[10px] rounded-tr-[10px] flex items-center">
             <label class="ml-5 text-white font-sm font-poppins">Track List</label>
-            
             <!-- Dropdown select -->
-            <select class="absolute top-0 right-5 h-full bg-emerald-500 text-white rounded-tr-[10px] rounded-br-[10px] border-none outline-none p-2">
-              <option value="001">001</option>
-              <option value="002">002</option>
-              
+            <select v-model="selectedTrack" @change="fetchTrackById" class="absolute top-0 right-5 h-full bg-emerald-500 text-white rounded-tr-[10px] rounded-br-[10px] border-none outline-none p-2">
+              <option v-for="id in trackId" :value="id.id">{{ id.name }}</option>
+              <option value="all">All</option>
             </select>
-            <div class="absolute top-0 right-2 h-full flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-4 w-4 text-white">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </div>
           </div>
         </div>
        
@@ -134,17 +123,30 @@
               <th class="px-2 py-2 text-sm text-center font-poppins">Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="selectedTrack === 'all'">
             <tr v-for="(track, index) in mappedTracks" :key="track.track_id">
               <td class="px-2 py-2 text-center font-poppins">{{ index + 1 }}</td>
               <td class="px-2 py-2 text-center font-poppins">{{ track.lat }} N</td>
               <td class="px-2 py-2 text-center font-poppins">{{ track.lng }} E</td>
-              <td class="px-2">
-                <input class="h-[1.8rem] rounded-[0.3rem] text-black" type="date" :value="formatDate(track.datetime)" />
-              </td>
+              <td class="px-2 py-2 text-center font-poppins">{{ formatDate(track.datetime) }}</td>
               <td class="px-2 py-2 text-center font-poppins">{{ track.time }}</td>
               <td class="px-2 py-2 text-center font-poppins">{{ track.windAvg }} kts</td>
               <td class="px-2 py-2 text-center font-poppins">{{ track.pressure }} mbar</td>
+              <td class="px-2 py-2 text-center font-poppins">
+                <button class="text-blue-500 hover:text-blue-700 mr-2">Edit</button>
+                <button class="text-red-500 hover:text-red-700">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+          <tbody v-if="selectedTrack !== 'all'">
+            <tr v-for="(track, index) in trackOne" :key="index">
+              <td class="px-2 py-2 text-center font-poppins">{{ index + 1 }}</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.geometry.coordinates[1] }} N</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.geometry.coordinates[0] }} E</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ new Date(track.properties.date).toLocaleDateString() }}</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ new Date(track.properties.date).toLocaleTimeString() }}</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.properties.meanWind }} kts</td>
+              <td class="px-2 py-2 text-center font-poppins">{{ track.properties.pressure }} mbar</td>
               <td class="px-2 py-2 text-center font-poppins">
                 <button class="text-blue-500 hover:text-blue-700 mr-2">Edit</button>
                 <button class="text-red-500 hover:text-red-700">Delete</button>
@@ -180,6 +182,9 @@ export default {
     return {
       isModalOpen: false,
       tracks: [],
+      trackId: [],
+      selectedTrack:'all',
+      trackOne: []
     };
   },
 
@@ -189,6 +194,12 @@ export default {
         const response = await axios.get('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all/');
         if (response.data.status === 'OK') {
           this.tracks = response.data.data.docs;
+          for(let i=0; i<this.tracks.length; i++){
+            this.trackId.push({id: this.tracks[i]._id, name: this.tracks[i].name})
+          }
+          
+          // console.log(this.trackId)
+          // console.log(this.tracks)
         } else {
           console.error('Error fetching tracks:', response.data);
         }
@@ -196,16 +207,27 @@ export default {
         console.error('Error fetching tracks:', error);
       }
     },
-    formatDate(dateString) {
-      const date = new Date(dateString);
-      const formattedDate = date.toISOString().split('T')[0];
+    async fetchTrackById() {
+      // console.log(this.selectedTrack)
+      try {
+        const res = await axios.get(`https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/${this.selectedTrack}`);
+        // console.log(res)
+        this.trackOne = res.data.data.track;
+        // console.log(this.trackOne)
+      } catch (error) {
+        console.error('Error fetching tracks:', error);
+      }
+    },
+    formatDate(datetime) {
+      // const date = new Date(dateString);
+      const formattedDate = new Date(datetime).toLocaleDateString('en-US');
       return formattedDate;
     },
     extractTime(datetime) {
       if (!datetime) {
         return '';
       }
-      const time = new Date(datetime).toLocaleTimeString('en-US', { hour12: false });
+      const time = new Date(datetime).toLocaleTimeString('en-US', { hour12: true });
       return time;
     },
   },
@@ -242,6 +264,7 @@ export default {
 
     return allTracks;
   },
+  
 }
 }
 </script>

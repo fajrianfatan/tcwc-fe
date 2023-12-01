@@ -54,6 +54,32 @@
   </div>
 </template>
 
-<script>
+<script setup>
+const axios = useAxiosDev()
+// const axios = useAxiosDev();
+const cookie = useCookie("user");
 
+var data = reactive({
+  routerdata: {},
+  userProfile: {},
+});
+
+onMounted(async () => {
+  var router = useRouter();
+  data.routerdata = router.currentRoute;
+  // console.log(data.routerdata);
+  // console.log(cookie.value);
+  if (cookie.value) {
+    const res = await axios.get(
+      "profile"
+    );
+
+    data.userProfile = res.data;
+  } else {
+    console.log("belum login");
+  }
+  // else {
+  //   alert("Anda belum login");
+  //
+});
 </script>

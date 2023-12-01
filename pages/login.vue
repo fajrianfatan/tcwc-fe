@@ -30,7 +30,7 @@
         <div class="w-[431px] h-[177px] left- top-0 absolute">
           <div class="w-[429px] h-16 left-[2px] top-0 absolute flex-col justify-start items-start inline-flex" @keyup.enter="handleLogin">
             <div class="text-white text-lg font-poppins">Email</div>
-            <input v-model="email" type="email" class="text-white text-lg font-poppins bg-transparent outline-transparent border-none focus:outline-none rounded-[10px] w-full" placeholder="email@bmkg.go.id"/>
+            <input v-model="data.email" type="email" class="text-white text-lg font-poppins bg-transparent outline-transparent border-none focus:outline-none rounded-[10px] w-full" placeholder="email@bmkg.go.id"/>
             <div class="w-[17px] h-[17px] relative origin-top-left rotate-180"></div>
             <div class="w-[429px] h-0.5 left-[2px] top-[62px] absolute bg-white"></div>
           </div>
@@ -38,7 +38,7 @@
             <div class="left-[2px] top-0 absolute text-white text-lg font-poppins">Password</div>
             <div class="w-[429px] h-0.5 left-[2px] top-[62px] absolute bg-white"></div>
             <div class="w-[429px] h-6 left-0 top-[31px] absolute">
-              <input v-model="password" type="password" class="text-white text-lg font-poppins bg-transparent border-none focus:outline-none rounded-[10px] w-full" placeholder="************"/>
+              <input v-model="data.password" type="password" class="text-white text-lg font-poppins bg-transparent border-none focus:outline-none rounded-[10px] w-full" placeholder="************"/>
               <div class="w-[17px] h-[17px] left-0 top-[2px] absolute flex-col justify-start items-start inline-flex"></div>
             </div>
             <div class="w-3.5 h-3.5 left-[417px] top-[39px] absolute">
@@ -48,7 +48,7 @@
         </div>
         <div class="w-[429px] h-[53px] left-[2px] top-[232px] absolute">
           <button class="w-[429px] h-[53px] left-0 top-0 bg-btn-submit rounded-[32px] shadow absolute text-white text-[17px] font-medium font-poppins"
-          type="submit">
+          @click="handleLogin()">
             Login
           </button>
         </div>
@@ -59,34 +59,55 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      email: '',
-      password: '',
-    };
-  },
-  methods: {
-    handleLogin() {
-      // Simulate login with provided username and password
-      const fakeEmail = 'admin@bmkg.go.id';
-      const fakePassword = 'admin123';
+<script setup>
+const axios = useAxios()
+// import axios from 'axios';
+var router = useRouter()
+var data = reactive({
+  email: 'admin.satellite@bmkg.go.id',
+  password: 'bmkg2023@satellite',
+  loading: false
+});
+var expire = new Date();
+// 14 days
+expire.setTime(new Date().getTime() + 3600000 * 24 * 14);
+const cookie = useCookie("user", {
+  maxAge: 1210000,
+});
 
-      if (this.email === fakeEmail && this.password === fakePassword) {
-        // Redirect to /disturbance if the username and password are correct
-        this.$router.push('/disturbance');
-      } else {
-        // Display an error message or take any other necessary action for incorrect credentials
-        alert('Incorrect username or password. Please try again.');
-        // Optionally, you can clear the input fields or perform other actions
-        this.email = '';
-        this.password = '';
-        this.$router.push('/');
-      }
-    },
-  },
+const handleLogin = async () => {
+  data.loading = true;
+  try {
+    const response = await axios.post("login", {
+      email: data.email,
+      password: data.password
+    });
+    // const response = await axios.post("login")
+    console.log(response);
+    cookie.value = response.data.data;
+    console.log(cookie.value);
+    
+router.push("/disturbance");
+  } catch (error) {
+    console.error(error);
+    data.loading = false;
+    alert("email atau password salah");
+  }
 };
+// async function handleLogin() {
+//   data.loading = true;
+//   // const token = Cookies.get('access_token');
+//   try {
+//     var res = await axios.post('https://tropicalcyclone.bmkg.go.id/api-tcwc/login', data.form)
+//     console.log(res);
+//     // Cookies.set('token', access_token)
+//     router.push('/disturbance');
+//   } catch (error) {
+//     data.loading = false;
+//     console.error('Login error:', error);
+//     alert('Incorrect username or password. Please try again.');
+//   }
+// }
 </script>
 
 <style scoped>

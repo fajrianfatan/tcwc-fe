@@ -1,20 +1,19 @@
 import axios from "axios";
 
-export const useAxios = () => {
-
+export const useAxiosDev = () => {
+  var cookies = useCookie("user");
   var router = useRouter();
   var runtime = useRuntimeConfig();
   const instance = axios.create({
     baseURL: runtime.public.baseURL,
     timeout: 10000,
-    withCredentials: false,
+    withCredentials: false
   });
 
   instance.interceptors.request.use(
     (config) => {
-
+      config.headers["Authorization"] = "Bearer " + cookies.value;
       config.headers["X-API-KEY"] = runtime.public.tokenDefault;
-
       return config;
     },
     function (error) {
@@ -26,6 +25,8 @@ export const useAxios = () => {
       return response;
     },
     function (error) {
+      alert("Anda Belum Login");
+      router.push("/login");
       return Promise.reject(error);
     }
   );

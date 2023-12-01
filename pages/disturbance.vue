@@ -119,10 +119,10 @@
 </template>
 
 <script>
-import axios from 'axios';
+
 import Navbar from "@/components/Navbar/Navbar.vue";
 import DisturbanceModal from "~/components/DisturbanceModal.vue";
-
+import axios from 'axios';
 export default {
   name: 'Disturbance',
   components: {
