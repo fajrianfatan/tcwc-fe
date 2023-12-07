@@ -104,9 +104,11 @@
 					</td>
 					<td class="px-6 py-4">
 						<div class="flex space-x-4">
-						<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
-						<NuxtLink to="/maps" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-						<NuxtLink to="#" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</NuxtLink>
+						<NuxtLink :to="`/disturbance/${disturbance.disturbance_id}`" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
+						<NuxtLink :to="`/maps/${disturbance.disturbance_id}`" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
+
+
+						<button @click="deleteDisturbance(disturbance.disturbance_id)" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</button>
 						</div>
 					</td>
 					</tr>
@@ -118,49 +120,52 @@
 	</div>
 </template>
 
-<script>
-
+<script setup>
 import Navbar from "@/components/Navbar/Navbar.vue";
 import DisturbanceModal from "~/components/DisturbanceModal.vue";
-import axios from 'axios';
-export default {
-  name: 'Disturbance',
-  components: {
-    Navbar,
-    DisturbanceModal,
-  },
-  data() {
-    return {
-      isModalOpen: false,
-      disturbances: [],
-    };
-  },
-  methods: {
-    async fetchDisturbances() {
-      try {
-        const response = await axios.get('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all/');
-        if (response.data.status === 'OK') {
-          this.disturbances = response.data.data.docs;
-        } else {
-          console.error('Error fetching disturbances:', response.data);
-        }
-      } catch (error) {
-        console.error('Error fetching disturbances:', error);
-      }
-    },
-  },
-  mounted() {
-    this.fetchDisturbances();
-  },
-  computed: {
-    mappedDisturbances() {
-      return this.disturbances.map(disturbance => ({
-        disturbance_id: disturbance._id,
-        cyclone_name: disturbance.name,
-        storm_identifier: disturbance.area,
-        priority: disturbance.direct_impact ? 1 : 0,
-      }));
-    },
-  },
+import { ref, onMounted, computed } from 'vue';
+const axios = useAxiosDev() // Adjust this path accordingly
+
+const isModalOpen = ref(false);
+const disturbances = ref([]);
+
+const fetchDisturbances = async () => {
+  try {
+    const response = await axios.get('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all/');
+    if (response.data.status === 'OK') {
+      disturbances.value = response.data.data.docs;
+    } else {
+      console.error('Error fetching disturbances:', response.data);
+    }
+  } catch (error) {
+    console.error('Error fetching disturbances:', error);
+  }
 };
+
+const mappedDisturbances = computed(() => {
+  return disturbances.value.map(disturbance => ({
+    disturbance_id: disturbance._id,
+    cyclone_name: disturbance.name,
+    storm_identifier: disturbance.area,
+    priority: disturbance.is_current ? 1 : 0,
+  }));
+});
+
+const deleteDisturbance = async (disturbanceId) => {
+  try {
+    const response = await axios.post('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/delete', {
+      _id: disturbanceId,  // Use _id instead of disturbance_id
+    });
+
+    if (response.data.status === 'OK') {
+      disturbances.value = disturbances.value.filter(disturbance => disturbance._id !== disturbanceId);
+      console.log('Disturbance deleted successfully');
+    } else {
+      console.error('Error deleting disturbance:', response.data);
+    }
+  } catch (error) {
+    console.error('Error deleting disturbance:', error);
+  }
+};
+fetchDisturbances();
 </script>

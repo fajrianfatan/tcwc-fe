@@ -6,12 +6,8 @@
           <div class="w-[12rem] mx-auto mt-2">
             <label for="countries" class="block mb-2 text-base text-gray-900 dark:text-white font-poppins">Select Track Type</label>
             <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option selected>Analysis Track</option>
-                <option>Guidance Forecast Track</option>
-                <option>Observation Track</option>
+                <option selected>Observation Track</option>
                 <option>Official Forecast Track</option>
-                <option>Post-event Best Track</option>
-                <option>Scratch Track</option>
             </select>
           </div>
       </div>

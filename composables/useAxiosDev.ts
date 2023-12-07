@@ -7,13 +7,14 @@ export const useAxiosDev = () => {
   const instance = axios.create({
     baseURL: runtime.public.baseURL,
     timeout: 10000,
-    withCredentials: false
+    // withCredentials: false
   });
 
   instance.interceptors.request.use(
     (config) => {
       config.headers["Authorization"] = "Bearer " + cookies.value;
       config.headers["X-API-KEY"] = runtime.public.tokenDefault;
+      console.log('Request Headers:', config.headers);
       return config;
     },
     function (error) {
