@@ -6,7 +6,7 @@ export const useAxios = () => {
   var runtime = useRuntimeConfig();
   const instance = axios.create({
     baseURL: runtime.public.baseURL,
-    timeout: 10000,
+    timeout: 100000,
     withCredentials: false,
   });
 

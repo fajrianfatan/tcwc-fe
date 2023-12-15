@@ -11,7 +11,7 @@
   </template>
 
 <script setup>
-import { reactive, ref, onMounted, defineProps, defineEmits } from 'vue';
+import { reactive } from 'vue';
 
 // Import useRoute from vue-router
 import { useRoute } from 'vue-router';
@@ -26,25 +26,16 @@ const coordinates = reactive({
   longitude: "",
 });
 
-// Define the emit function to send data to the parent component
-const { emit } = defineEmits();
-
-// Define the data reactive object to store the params
-const data = reactive({
-  params: '',
+const params = reactive({
+  id: '',
 });
-
-// Access the route object
 const route = useRoute();
 
-// Use onMounted to perform actions after the component is mounted
-onMounted(async () => {
-  // Get the params from the route and store them in data.params
-  data.params = route.params.id;
-  console.log('Params:', data.params);
-  // Emit the params to the parent component
-  emit('params', { params: data.params });
+// Fetch and store the 'id' parameter from the URL when the component is mounted
+onMounted(() => {
+  params.id = route.params.id;
 });
+
 
 // Define the getlatlng function
 const getlatlng = (ltlng) => {

@@ -7,7 +7,7 @@ export const useAxiosDev = () => {
   const instance = axios.create({
     baseURL: runtime.public.baseURL,
     timeout: 10000,
-    // withCredentials: false
+    
   });
 
   instance.interceptors.request.use(

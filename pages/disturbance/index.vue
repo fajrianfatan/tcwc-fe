@@ -106,8 +106,6 @@
 						<div class="flex space-x-4">
 						<NuxtLink :to="`/disturbance/${disturbance.disturbance_id}`" class="font-medium text-blue-600 dark:text-black hover:underline">Edit</NuxtLink>
 						<NuxtLink :to="`/maps/${disturbance.disturbance_id}`" class="font-medium text-blue-600 dark:text-black hover:underline">Edit Track</NuxtLink>
-
-
 						<button @click="deleteDisturbance(disturbance.disturbance_id)" class="font-medium text-blue-600 dark:text-black hover:underline">Delete</button>
 						</div>
 					</td>
@@ -124,7 +122,7 @@
 import Navbar from "@/components/Navbar/Navbar.vue";
 import DisturbanceModal from "~/components/DisturbanceModal.vue";
 import { ref, onMounted, computed } from 'vue';
-const axios = useAxiosDev() // Adjust this path accordingly
+const axios = useAxiosDev()
 
 const isModalOpen = ref(false);
 const disturbances = ref([]);
@@ -152,20 +150,23 @@ const mappedDisturbances = computed(() => {
 });
 
 const deleteDisturbance = async (disturbanceId) => {
-  try {
-    const response = await axios.post('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/delete', {
-      _id: disturbanceId,  // Use _id instead of disturbance_id
-    });
+	const isConfirmed = window.confirm('Apakah anda yakin akan menghapus data ini?');
+    if (isConfirmed) {
+		try {
+			const response = await axios.post('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/delete', {
+			_id: disturbanceId,
+			});
 
-    if (response.data.status === 'OK') {
-      disturbances.value = disturbances.value.filter(disturbance => disturbance._id !== disturbanceId);
-      console.log('Disturbance deleted successfully');
-    } else {
-      console.error('Error deleting disturbance:', response.data);
-    }
-  } catch (error) {
-    console.error('Error deleting disturbance:', error);
-  }
+			if (response.data.status === 'OK') {
+			disturbances.value = disturbances.value.filter(disturbance => disturbance._id !== disturbanceId);
+			console.log('Disturbance deleted successfully');
+			} else {
+			console.error('Error deleting disturbance:', response.data);
+			}
+		} catch (error) {
+			console.error('Error deleting disturbance:', error);
+		}
+	}
 };
 fetchDisturbances();
 </script>
