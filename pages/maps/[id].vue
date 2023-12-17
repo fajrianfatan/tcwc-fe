@@ -11,16 +11,11 @@
   </template>
 
 <script setup>
-import { reactive } from 'vue';
-
-// Import useRoute from vue-router
-import { useRoute } from 'vue-router';
-
-// Import the necessary components
 import Navbar from "@/components/Navbar/Navbar.vue";
 import TrackType from "@/components/Form/Track.vue";
+import { reactive } from 'vue';
+import { useRoute } from 'vue-router';
 
-// Define the coordinates reactive object
 const coordinates = reactive({
   latitude: "",
   longitude: "",
@@ -31,18 +26,14 @@ const params = reactive({
 });
 const route = useRoute();
 
-// Fetch and store the 'id' parameter from the URL when the component is mounted
 onMounted(() => {
   params.id = route.params.id;
 });
 
-
-// Define the getlatlng function
 const getlatlng = (ltlng) => {
   coordinates.latitude = ltlng.latitude;
   coordinates.longitude = ltlng.longitude;
 };
 
-// Define the mapready function
 const mapready = (map) => {};
 </script>

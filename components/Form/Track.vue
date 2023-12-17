@@ -1,89 +1,8 @@
 <template>
   <div class="z-50 w-full h-full">
-    <div class="w-[14rem] h-[5.5rem] mt-4 ml-4 relative z-100">
-      <div class="w-[14rem] h-[5.5rem] left-0 top-0 absolute bg-dark rounded-[10px]">
-        <div class="w-[12rem] mx-auto mt-2">
-          <label for="countries" class="block mb-2 text-base text-gray-900 dark:text-white font-poppins">Select Track Type</label>
-          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option selected>Observation Track</option>
-              <option>Official Forecast Track</option>
-          </select>
-        </div>
-    </div>
-    </div>
-
-    <div class="w-[14rem] h-[5.5rem] mt-4 ml-4 relative">
-      <div class="w-[14rem] h-[5.5rem] left-0 top-0 absolute bg-dark rounded-[10px]">
-        <div class="w-[12rem] mx-auto mt-2">
-          <label for="countries" class="block mb-2 text-base text-gray-900 dark:text-white font-poppins">Data Source</label>
-          <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-1 bg-white dark:border-gray-600 dark:placeholder-gray-400 text-black dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option>Brisbane CWS</option>
-              <option>Brisbane TCWC</option>
-              <option>Darwin RSMC</option>
-              <option selected>Darwin TCWC</option>
-              <option>Fiji</option>
-              <option>Guam</option>
-              <option>Honolulu</option>
-              <option>JMA</option>
-              <option>Jakarta</option>
-              <option>La Reunion</option>
-              <option>Manila</option>
-              <option>Nuku Alofa</option>
-              <option>Perth CWS</option>
-              <option>Perth TCWC</option>
-              <option>Port Moresby</option>
-              <option>Port Vila</option>
-              <option>Wellington</option>
-          </select>
-        </div>
-    </div>
-    </div>
-
-    <div class="w-[20rem] h-[22rem] mt-4 ml-4 relative">
-      <div class="w-[20rem] h-[22rem] left-0 top-0 absolute bg-dark rounded-[10px]"></div>
-      <div class="w-[10rem] h-[15.61px] left-[15px] top-[15.61px] absolute text-white text-medium font-poppins">Add Fix</div>
-
-      <div class="w-full left-[15px] top-[3rem] absolute flex space-x-2">
-        <div class="w-[8.5rem]">
-          <label for="date" class="text-white text-sm font-medium font-poppins">Date</label>
-          <input type="date" id="date" class="w-full p-1 bg-gray-100 rounded-[10px]" />
-        </div>
-        <div class="w-[8.5rem]">
-          <label for="time" class="text-white text-sm font-medium font-poppins">Time</label>
-          <input type="time" id="time" class="w-full p-1 bg-gray-100 rounded-[10px]" />
-        </div>
-      </div>
-
-      <div class="w-full left-[15px] top-[7.5rem] absolute flex space-x-2">
-        <div class="w-[8.5rem]">
-          <label for="latitude" class="text-white text-sm font-medium font-poppins">Latitude</label>
-          <input :value="props.coordinates.latitude" type="number" id="latitude" class="w-full p-1 bg-gray-100 rounded-[10px]" />
-        </div>
-        <div class="w-[8.5rem]">
-          <label for="longitude" class="text-white text-sm font-medium font-poppins">Longitude</label>
-          <input :value="props.coordinates.longitude" type="number" id="longitude" class="w-full p-1 bg-gray-100 rounded-[10px]" />
-        </div>
-      </div>
-
-      <div class="w-full left-[15px] top-[12rem] absolute flex space-x-2">
-        <div class="w-[8.5rem]">
-          <label for="pressure" class="text-white text-sm font-medium font-poppins">Pressure</label>
-          <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" min="0" maxlength="4" class="w-full p-1 bg-gray-100 rounded-[10px]" />
-        </div>
-        <div class="w-[8.5rem]">
-          <label for="wind-average" class="text-white text-sm font-medium font-poppins">Wind Average</label>
-          <input type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" id="wind-average" min="0" maxlength="3" class="w-full p-1 bg-gray-100 rounded-[10px]" />
-        </div>
-      </div>
-
-      <div class="w-[143px] h-[38px] mt-4 left-[15px] top-[16.5rem] absolute bg-emerald-500 rounded-[32px] shadow justify-center items-center gap-2.5 inline-flex">
-        <div class="text-white text-sm font-medium font-poppins">Save Track</div>
-      </div>
-    </div>
-    
-  </div>
-  
-  <div class="z-50 w-full h-full">
+    <button @click="saveCSV" class="fixed w-[6rem] h-[2.5rem] top-[6rem] left-4 bg-btn-submit text-white rounded-full p-2">
+      Save CSV
+    </button>
     <button @click="toggleTrackList" class="fixed bottom-4 left-[48rem] transform -translate-x-1/2 bg-emerald-500 text-white rounded-full p-2">
       {{ showTrackList ? 'Minimize Track List' : 'Maximize Track List' }}
     </button>
@@ -131,8 +50,13 @@
 </template>
 
 <script setup>
-const axios = useAxiosDev()
 import { ref } from 'vue';
+import { useDisturbanceStore } from '~/store';
+
+const axios = useAxiosDev()
+const disturbanceStore = useDisturbanceStore();
+const disturbanceData = disturbanceStore.formData;
+console.log(disturbanceData)
 const showTrackList = ref(true);
 
 const toggleTrackList = () => {
@@ -180,6 +104,42 @@ const fetchTrackById = async () => {
 onMounted(() => {
   fetchTrackById();
 });
+
+const saveCSV = async () => {
+  try {
+    const res = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
+    const shouldSave = window.confirm("Apakah anda akan mencetak data kedalam file csv?");
+    if (!shouldSave) {
+      return;
+    }
+    const cycloneName = res.data.data.name;
+    const timestamp = new Date().toISOString().replace(/[-T:]/g, "").slice(0, 14);
+    let csvContent = 
+      "No,Longitude,Latitude,Date,Time,Wind Average,Pressure\n";
+    data.trackOne.forEach((track, index) => {
+      const row = [
+        index + 1,
+        track.lng,
+        track.lat,
+        new Date(track.datetime).toLocaleDateString(),
+        new Date(track.datetime).toLocaleTimeString(),
+        track.windAvg,
+        track.pressure,
+      ];
+      csvContent += row.join(",") + "\n";
+    });
+    const blob = new Blob([csvContent], { type: "text/csv" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    const filename = `${cycloneName}_${useRoute().params.id}_track_data_${timestamp}.csv`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("An error occurred while saving CSV:", error);
+  }
+};
 
 </script>
 

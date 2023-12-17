@@ -23,7 +23,6 @@
 							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
 						</svg>
 					</button>
-					<!-- Dropdown menu -->
 					<div id="dropdownRadio" class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top" style="position: absolute; inset: auto auto 0px 0px; margin: 0px; transform: translate3d(522.5px, 3847.5px, 0px);">
 						<ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
 							<li>
@@ -121,8 +120,9 @@
 <script setup>
 import Navbar from "@/components/Navbar/Navbar.vue";
 import DisturbanceModal from "~/components/DisturbanceModal.vue";
-import { ref, onMounted, computed } from 'vue';
+import { ref, computed } from 'vue';
 const axios = useAxiosDev()
+const router = useRouter()
 
 const isModalOpen = ref(false);
 const disturbances = ref([]);
@@ -159,7 +159,7 @@ const deleteDisturbance = async (disturbanceId) => {
 
 			if (response.data.status === 'OK') {
 			disturbances.value = disturbances.value.filter(disturbance => disturbance._id !== disturbanceId);
-			console.log('Disturbance deleted successfully');
+			router.go(0);
 			} else {
 			console.error('Error deleting disturbance:', response.data);
 			}

@@ -77,7 +77,7 @@
             @click="submitForm"
             >
             Save
-            </NuxtLink>
+          </NuxtLink>
         </div>
     </form>
 </section>
@@ -87,17 +87,18 @@
 import { ref, onMounted, computed } from 'vue';
 const axios = useAxiosDev()
 const route = useRoute()
-const params = route.params.id;
-const disturbanceData = ref({}); // Change initialization to an empty object
 
-const formattedDateInput = ref(''); // Create a separate ref for the input
+const params = route.params.id;
+const disturbanceData = ref({});
+const priority = ref('');
+const formattedDateInput = ref('');
 
 const fetchDistData = async () => {
     try {
         const response = await axios.get(`https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/${params}`);
         if (response.data.status === 'OK') {
             disturbanceData.value = response.data.data;
-            // Ensure that the API provides a valid month and year format, and set it to the formattedDate
+
             formattedDateInput.value = `${response.data.data?.year}-${String(response.data.data?.month).padStart(2, '0')}`;
             priority.value = response.data.data.is_current ? 'High' : 'Low';
         } else {
@@ -132,8 +133,7 @@ const submitForm = async () => {
     );
 
     if (response.data.status === 'OK') {
-      console.log('Data updated successfully:', response.data);
-      // Redirect to the disturbance page or handle success as needed
+      
     } else {
       console.error('Error updating data:', response.data);
     }
@@ -144,11 +144,4 @@ const submitForm = async () => {
 
 onMounted(fetchDistData);
 
-// Format the date as per your requirement
-const formattedDate = computed(() => {
-  const month = disturbanceData.value?.month;
-  const year = disturbanceData.value?.year;
-  return month && year ? `${month}/${year}` : '';
-});
-const priority = ref('');
 </script>

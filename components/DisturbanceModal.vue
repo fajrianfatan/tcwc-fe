@@ -2,17 +2,12 @@
 	<div>
 	<div v-if="showModal" class="modal-overlay">
     <div class="flex items-center justify-center h-screen">
-      <div class="w-[25rem] h-[20rem] bg-gray-200 rounded-[10px] flex flex-col">
+      <div class="w-[25rem] h-[16.5rem] bg-gray-200 rounded-[10px] flex flex-col">
         <div class="w-[25rem] h-[2.5rem] bg-emerald-500 rounded-tl-[10px] rounded-tr-[10px] shadow">
           <div class="ml-4 mt-2 text-white text-base text-semibold font-poppins">Create New Disturbance</div>
         </div>
 		
 		<div class="p-4 flex flex-col flex-grow">
-		  <div class="flex items-center mb-3">
-			<div class="text-black text-base font-medium font-poppins tracking-wide">Disturbance Id</div>
-			<span class="flex-grow"></span>
-			<input class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text" disabled>
-		  </div>
 	
 		  <div class="flex items-center mb-3">
 			<div class="text-black text-base font-medium font-poppins tracking-wide">Cyclone Name</div>
@@ -41,13 +36,21 @@
             </div>
           </div>
 	
-		  <div class="mt-7">
-			<div class="flex justify-between">
-				<button @click="cancelAdd" class="w-[6rem] h-[2.5rem] flex items-center justify-center bg-gray-400 text-white font-poppins rounded-[10px]">Cancel</button>
-            	<button @click="createDisturbance" class="w-[6rem] h-[2.5rem] flex items-center justify-center bg-emerald-500 text-white font-poppins rounded-[10px]">Create</button>
-            </div>
+          <div class="mt-7 flex justify-end">
+            <button
+              @click="cancelAdd"
+              class="w-[6rem] h-[2.5rem] flex items-center justify-center bg-gray-400 text-white font-poppins rounded-[10px] mr-2"
+            >
+              Cancel
+            </button>
+            <button
+              @click="createDisturbance"
+              class="w-[6rem] h-[2.5rem] flex items-center justify-center bg-emerald-500 text-white font-poppins rounded-[10px]"
+            >
+              Create
+            </button>
+          </div>
 		  </div>
-		</div>
 	  </div>
 	</div>
 	</div>
@@ -55,17 +58,21 @@
   </template>
   
 <script setup>
-const axios = useAxiosDev()
+import { ref, reactive} from 'vue';
+import { useDisturbanceStore } from '~/store';
+
 const router = useRouter()
 const showModal = ref(true);
+const disturbanceStore = useDisturbanceStore();
+
 
 var data = reactive({
-	month: '12',
+	  month: '12',
     year: '2023',
     area: 'bbu',
-    name: 'TC Cempaka',
+    name: '',
     description: 'abc',
-    is_current: 'true',
+    is_current: 'false',
     direct_impact: false,
     track: [], 
     forecast: [], 
@@ -74,47 +81,22 @@ var data = reactive({
     ocean_gale: [], 
     gale: [], 
     extreme_weather: [],
-	description_id: 'xyz',
-	loading: false
+    description_id: 'xyz',
+    loading: false
 });
-
+ 
 const createDisturbance = async () => {
-	data.loading = true;
-	try {
-		// Send data to the API
-		const response = await axios.post('tcwc/cyclone/create', {
-			month: data.month,
-			year: data.year,
-			area: data.area,
-			name: data.name,
-			description: data.description,
-			is_current: JSON.parse(data.is_current),
-			direct_impact: data.direct_impact,
-			track: data.track, 
-			forecast: data.forecast, 
-			technical_bulletin: data.technical_bulletin, 
-			public_bulletin: data.public_bulletin, 
-			ocean_gale: data.ocean_gale, 
-			gale: data.gale, 
-			extreme_weather: data.extreme_weather,
-			description_id: data.description_id
-		});
 
-		console.log('API Response:', response);
-		showModal.value = false;
-		router.push(`/maps/${response.data.data._id}`);
-
-	} catch (error) {
-		console.error('Error submitting data to API:', error);
-		data.loading = false;
-		alert("Kesalahan dalam proses menambah data baru");
-	}
+	disturbanceStore.setFormData(data);
+	showModal.value = false;
+	router.push("/maps/add");
 };
 
 const cancelAdd = () => {
   showModal.value = false;
   router.go(0);
 };
+
 </script>
   
   

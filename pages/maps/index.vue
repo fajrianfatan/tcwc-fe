@@ -22,10 +22,7 @@ const coordinates = reactive({
 const getlatlng = (ltlng) => {
   coordinates.latitude = ltlng.latitude;
   coordinates.longitude = ltlng.longitude;
-  
 };
-
-
 
 const mapready = (map) => {};
 </script>
