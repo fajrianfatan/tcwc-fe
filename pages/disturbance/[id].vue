@@ -95,7 +95,7 @@ const formattedDateInput = ref('');
 
 const fetchDistData = async () => {
     try {
-        const response = await axios.get(`https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/${params}`);
+        const response = await axios.get(`url/api/get/cyclone/get/${params}`);
         if (response.data.status === 'OK') {
             disturbanceData.value = response.data.data;
 
@@ -128,7 +128,7 @@ const submitForm = async () => {
     };
 
     const response = await axios.post(
-      'https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/update',
+      'url/api/get/cyclone/update',
       editedData
     );
 

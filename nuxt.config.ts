@@ -5,13 +5,13 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
-    
+    "nuxt-icon",
     
   ],
   
   runtimeConfig: {
     public: {
-      baseURL: `${process.env.API_URL || "https://tropicalcyclone.bmkg.go.id/api-tcwc/"}`,
+      baseURL: `${process.env.API_URL || "url/api/api-tcwc/"}`,
       tokenDefault: process.env.TOKEN_DEFAULT
     },
   },

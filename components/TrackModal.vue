@@ -11,25 +11,25 @@
       <div class="flex items-center mb-3">
 			<div class="text-black text-base font-medium font-poppins tracking-wide">Date</div>
 			<span class="flex-grow"></span>
-			<input v-model="trackData.properties.date" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="date">
+			<input v-model="data.properties.date" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="date">
 		  </div>
           
           <div class="flex items-center mb-3">
 			<div class="text-black text-base font-medium font-poppins tracking-wide">Time</div>
 			<span class="flex-grow"></span>
-			<input v-model="trackData.properties.time" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="time">
+			<input v-model="data.properties.time" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="time">
 		  </div>
 
           <div class="flex items-center mb-3">
 			<div class="text-black text-base font-medium font-poppins tracking-wide">Wind Avg</div>
 			<span class="flex-grow"></span>
-			<input v-model="trackData.properties.meanWind" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" min="0" maxlength="3" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text">
+			<input v-model="data.properties.meanWind" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" min="0" maxlength="3" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text">
 		  </div>
 
           <div class="flex items-center mb-3">
 			<div class="text-black text-base font-medium font-poppins tracking-wide">Pressure</div>
 			<span class="flex-grow"></span>
-			<input v-model="trackData.properties.pressure" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" min="0" maxlength="4" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text">
+			<input v-model="data.properties.pressure" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1').replace(/^0[^.]/, '0');" min="0" maxlength="4" class="w-[13rem] h-[2rem] bg-white text-black text-sm rounded-[3px] border border-zinc-400" type="text">
 		  </div>
 	
 		  <div class="mt-7">
@@ -52,70 +52,100 @@ const axios = useAxiosDev()
 
 const showModal = ref(true);
 const props = defineProps(['trackParams']);
-
-const trackData = ref({
+console.log(props.trackParams.id)
+const data = ref({
   properties: {
     date: '',
-	time: '',
+    time: '',
     meanWind: '',
     pressure: '',
   }
 });
 
 onMounted(async () => {
-  const response = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
-  const track = response.data.data.track.find(track => track._id === props.trackParams.id);
+  try {
+    const response = await axios.get("url/api/get/cyclone/get/" + useRoute().params.id);
+    const cycloneData = response.data.data;
 
-  trackData.value.properties = {
-    date: new Date(track.properties.date).toISOString().split('T')[0],
-	  time: new Date(track.properties.date).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
-    meanWind: track.properties.meanWind,
-    pressure: track.properties.pressure,
-  };
+    if (props.trackParams.id) {
+      const dataId = props.trackParams.id;
 
+      const trackOrForecast = cycloneData.track.concat(cycloneData.forecast).find(item => item._id === dataId);
+
+      if (trackOrForecast) {
+        // Update data properties based on track or forecast
+        data.value.properties = {
+          date: new Date(trackOrForecast.properties.date).toISOString().split('T')[0],
+          time: new Date(trackOrForecast.properties.date).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' }),
+          meanWind: trackOrForecast.properties.meanWind,
+          pressure: trackOrForecast.properties.pressure,
+        };
+      } else {
+        console.error('Track or Forecast not found for the provided id:', dataId);
+      }
+    } else {
+      console.error('Invalid parameters provided. Expected props.trackParams.id or props.trackParams.f_id.');
+    }
+  } catch (error) {
+    console.error('Error fetching cyclone data:', error);
+  }
 });
 
 const submitUpdate = async () => {
   try {
-    const dateTimeString = `${trackData.value.properties.date} ${trackData.value.properties.time}`;
+    // Validate input fields
+    if (!data.value.properties.date || !data.value.properties.time || !data.value.properties.meanWind || !data.value.properties.pressure) {
+      // Display an alert or log an error message
+      alert('Please fill in all required fields.');
+      return;
+    }
+
+    const dateTimeString = `${data.value.properties.date} ${data.value.properties.time}`;
     const combinedDateTime = new Date(dateTimeString);
 
-    const response = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
-    const existingTracks = response.data.data.track;
-    const trackIndex = existingTracks.findIndex(existingTrack => existingTrack._id === props.trackParams.id);
-	
-    if (trackIndex !== -1) {
-      const updatedTrack = {
-        ...existingTracks[trackIndex],
+    const response = await axios.get("url/api/get/cyclone/get/" + useRoute().params.id);
+
+    const trackAndForecastData = response.data.data.track.concat(response.data.data.forecast);
+
+    // Find the index based on the scenario
+    const dataIndex = trackAndForecastData.findIndex(item => item._id === props.trackParams.id);
+
+    if (dataIndex !== -1) {
+      // Update the data properties based on the scenario
+      const updatedData = {
+        ...trackAndForecastData[dataIndex],
         geometry: {
-          coordinates: existingTracks[trackIndex].geometry.coordinates,
+          coordinates: trackAndForecastData[dataIndex].geometry.coordinates,
           type: "Point",
         },
         type: "Feature",
         properties: {
           date: combinedDateTime.toISOString(),
-          meanWind: parseFloat(trackData.value.properties.meanWind),
-          pressure: parseFloat(trackData.value.properties.pressure),
+          meanWind: parseFloat(data.value.properties.meanWind),
+          pressure: parseFloat(data.value.properties.pressure),
         },
       };
-      const updatedTracksArray = [...existingTracks];
-      updatedTracksArray[trackIndex] = updatedTrack;
 
-      const updatedTrackData = {
+      // Update the array based on the scenario
+      const updatedDataArray = [...trackAndForecastData];
+      updatedDataArray[dataIndex] = updatedData;
+
+      // Create the payload based on the scenario
+      const updatePayload = {
         _id: useRoute().params.id,
-        track: updatedTracksArray,
+        track: updatedDataArray,
       };
 
+      // Perform the update based on the scenario
       const updateResponse = await axios.post(
-        'https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/update',
-        updatedTrackData
+        'url/api/get/cyclone/update',
+        updatePayload
       );
-	  
-      showModal.value = false;
-      router.go(0);
 
+      showModal.value = false;
+      // router.go(0);
     } else {
-      console.error('Track not found for update.');
+      console.error('Data not found for update. Check if the provided ID matches any items in the existingData array.');
     }
   } catch (error) {
     console.error('Error updating cyclone:', error);

@@ -71,7 +71,7 @@ var data = reactive({
 }) 
 const fetchTrackById = async () => {
   try {
-    const res = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
+    const res = await axios.get("url/api/get/cyclone/get/" + useRoute().params.id);
     if (res && res.data.data.track && res.data.data.track.length > 0) {
       data.trackOne = [];
       for (let i = 0; i < res.data.data.track.length; i++) {
@@ -107,7 +107,7 @@ onMounted(() => {
 
 const saveCSV = async () => {
   try {
-    const res = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
+    const res = await axios.get("url/api/get/cyclone/get/" + useRoute().params.id);
     const shouldSave = window.confirm("Apakah anda akan mencetak data kedalam file csv?");
     if (!shouldSave) {
       return;

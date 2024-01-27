@@ -78,30 +78,37 @@
     });
   };
 
-  const onMarkerDragEnd = () => {
-    const confirmSave = window.confirm(
-      "Apakah Anda akan menyimpan titik koordinat ini?"
-    );
+  const isAddingMarker = ref(true);
 
-    if (confirmSave) {
-      data.marker.setDraggable(false);
-      data.isMarkerDraggable = false;
-    } else {
-      data.isMarkerDraggable = true;
-    }
-    data.isMarkerDraggable = true;
-  };
+const onMarkerDragEnd = () => {
+  const confirmSave = window.confirm("Apakah Anda akan menyimpan titik koordinat ini?");
 
-  const addMarker = (lngLat, date, pressure, meanWind) => {
+  if (confirmSave) {
+    data.marker.setDraggable(false);
+    isAddingMarker.value = true; // Disable adding new markers
+  } else {
+    data.marker.setLngLat([formData.longitude, formData.latitude]); // Reset marker position
+  }
+};
+
+const addMarker = (lngLat, date, pressure, meanWind) => {
+  // Check if adding new markers is allowed
+  if (isAddingMarker.value) {
+    isAddingMarker.value = false;
     const marker = new maplibregl.Marker({ draggable: data.isMarkerDraggable })
       .setLngLat(lngLat)
       .setPopup(new maplibregl.Popup().setHTML(`<b>Date:</b> ${date}<br><b>Pressure:</b> ${pressure}<br><b>Wind Average:</b> ${meanWind}`))
       .addTo(data.map);
+
     data.marker = marker;
     marker.on('drag', onMarkerDrag);
     marker.on('dragend', onMarkerDragEnd);
+
     emit('latlng', { latitude: lngLat.lat.toFixed(1), longitude: lngLat.lng.toFixed(1) });
-  };
+  } else {
+    alert("Please save the current marker before adding a new one.");
+  }
+};
 
   await nextTick();
 

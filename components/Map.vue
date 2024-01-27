@@ -52,8 +52,11 @@ var data = reactive({
   ],
 });
 const trackParams = reactive({
-  id: ''
+  id: '',
+
 })
+
+console.log('trackParams in Map.vue:', trackParams);
 const formData = reactive({
 x: '',
 y: '',
@@ -68,19 +71,20 @@ const exitEditMode = () => {
   
 };
 const addMarker = (lngLat, trackId, date, latitude, longitude, meanWind, pressure) => {
+
 const popupContent = document.createElement('div');
-popupContent.innerHTML = `
-<b>Date:</b> ${date}<br>
-<b>Latitude:</b> <span class="latitude">${latitude} N</span><br>
-<b>Longitude:</b> <span class="longitude">${longitude} E</span><br>
-<b>Wind Avg:</b> ${meanWind} knots<br>
-<b>Pressure:</b> ${pressure} mbar<br>
-<div class="popup-buttons">
-  <button class="edit-position-btn">Edit Position</button>
-  <button class="edit-btn">Edit</button>
-  <button class="save-btn">Save</button>
-</div>
-`;
+  popupContent.innerHTML = `
+    <b>Date:</b> ${date}<br>
+    <b>Latitude:</b> <span class="latitude">${latitude} N</span><br>
+    <b>Longitude:</b> <span class="longitude">${longitude} E</span><br>
+    <b>Wind Avg:</b> ${meanWind} knots<br>
+    <b>Pressure:</b> ${pressure} mbar<br>
+    <div class="popup-buttons">
+      <button class="edit-position-btn">Edit Position</button>
+      <button class="edit-btn">Edit</button>
+      <button class="save-btn">Save</button>
+    </div>
+  `;
 let isMarkerDraggable = isEditMode.value;
 
 let marker = new maplibregl.Marker({
@@ -91,10 +95,17 @@ let marker = new maplibregl.Marker({
     new maplibregl.Popup().setDOMContent(popupContent)
   )
   .addTo(data.map);
+// Hide trackId if it exists
 const trackIdElement = popupContent.querySelector('.track-id');
-if (trackIdElement) {
-  trackIdElement.style.display = 'none';
-}
+  if (trackIdElement) {
+    trackIdElement.style.display = 'none';
+  }
+
+  // // Hide forecastId if it exists
+  // const forecastIdElement = popupContent.querySelector('.forecast-id');
+  // if (forecastIdElement) {
+  //   forecastIdElement.style.display = 'none';
+  // }
 marker.on("dragstart", () => {
   isDragging.value = true;
 });
@@ -116,8 +127,13 @@ marker.on("dragend", () => {
 });
 
 popupContent.querySelector('.edit-btn').addEventListener('click', () => {
-  trackParams.id = trackId; 
-  isModalOpen.value = true;
+  trackParams.id = trackId;
+  // trackParams.f_id = forecastId;
+  console.log('Track ID:', trackParams.id);
+  // console.log('Forecast ID:', trackParams.f_id);
+  if (trackParams.id) {
+    isModalOpen.value = true;
+  }
 });
 
 const handleEditButton = () => {
@@ -129,58 +145,107 @@ popupContent.querySelector('.save-btn').addEventListener('click', async () => {
   const isConfirmed = window.confirm('Simpan perubahan titik koordinat?');
   if (isConfirmed) {
     try {
-    const response = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
+    const response = await axios.get("url/api/get/cyclone/get/" + useRoute().params.id);
     const existingTracks = response.data.data.track;
+    const existingForecasts = response.data.data.forecast;
     const trackIndex = existingTracks.findIndex(existingTrack => existingTrack._id === trackId);
+    const forecastIndex = existingForecasts.findIndex(existingForecast => existingForecast._id === trackId);
+    if (trackIndex !== -1 || forecastIndex !== -1){
+      if (trackIndex !== -1) {
+        const updatedTrack = {
+          ...existingTracks[trackIndex],
+          geometry: {
+            coordinates: [
+              parseFloat(formData.longitude),
+              parseFloat(formData.latitude),
+            ],
+            type: "Point",
+          },
+          type: "Feature",
+          properties: {
+            date: existingTracks[trackIndex].properties.date,
+            meanWind: existingTracks[trackIndex].properties.meanWind,
+            pressure: existingTracks[trackIndex].properties.pressure,
+          },
+        };
+        console.log('Updated Track ID:', updatedTrack._id);
+        console.log('Mean Wind:', updatedTrack.geometry.coordinates[0]);
+        console.log('Pressure:', updatedTrack.geometry.coordinates[1]);
+        console.log('Existing Track Values:', existingTracks[trackIndex]);
+        console.log('Updated Track Object:', updatedTrack);
+        router.push(useRoute().params.id);
 
-    if (trackIndex !== -1) {
-      const updatedTrack = {
-        ...existingTracks[trackIndex],
-        geometry: {
-          coordinates: [
-            parseFloat(formData.longitude),
-            parseFloat(formData.latitude),
-          ],
-          type: "Point",
-        },
-        type: "Feature",
-        properties: {
-          date: existingTracks[trackIndex].properties.date,
-          meanWind: existingTracks[trackIndex].properties.meanWind,
-          pressure: existingTracks[trackIndex].properties.pressure,
-        },
-      };
-      console.log('Updated Track ID:', updatedTrack._id);
-      console.log('Mean Wind:', updatedTrack.geometry.coordinates[0]);
-      console.log('Pressure:', updatedTrack.geometry.coordinates[1]);
-      console.log('Existing Track Values:', existingTracks[trackIndex]);
-      console.log('Updated Track Object:', updatedTrack);
-      router.push(useRoute().params.id);
+        const updatedTracksArray = [...existingTracks];
+        updatedTracksArray[trackIndex] = updatedTrack;
+        const updatedTrackData = {
+          _id: useRoute().params.id,
+          track: updatedTracksArray,
+        };
 
-      const updatedTracksArray = [...existingTracks];
-      updatedTracksArray[trackIndex] = updatedTrack;
-      const updatedTrackData = {
-        _id: useRoute().params.id,
-        track: updatedTracksArray,
-      };
+        console.log('Payload to be sent:', updatedTrackData);
+        const updateResponse = await axios.post(
+          'url/api/get/cyclone/update',
+          updatedTrackData
+        );
+        
+        
+        console.log('Server Response Track ID:', updateResponse.data._id);
+        console.log('Hardcoded Response:', { data: 'Updated successfully' });
+        console.log(updateResponse.data);
+        marker.setDraggable(false);
+        exitEditMode();
+        marker.togglePopup();
 
-      console.log('Payload to be sent:', updatedTrackData);
-      const updateResponse = await axios.post(
-        'https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/update',
-        updatedTrackData
-      );
-      
-      
-      console.log('Server Response Track ID:', updateResponse.data._id);
-      console.log('Hardcoded Response:', { data: 'Updated successfully' });
-      console.log(updateResponse.data);
-      marker.setDraggable(false);
-      exitEditMode();
-      marker.togglePopup();
+        router.go(0);
+      } else if (forecastIndex !== -1) {
+        const updatedForecast = {
+          ...existingForecasts[forecastIndex],
+          geometry: {
+            coordinates: [
+              parseFloat(formData.longitude),
+              parseFloat(formData.latitude),
+            ],
+            type: "Point",
+          },
+          type: "Feature",
+          properties: {
+            date: existingForecasts[forecastIndex].properties.date,
+            meanWind: existingForecasts[forecastIndex].properties.meanWind,
+            pressure: existingForecasts[forecastIndex].properties.pressure,
+          },
+        };
+        console.log('Updated Forecast ID:', updatedForecast._id);
+        console.log('Mean Wind:', updatedForecast.geometry.coordinates[0]);
+        console.log('Pressure:', updatedForecast.geometry.coordinates[1]);
+        console.log('Existing Forecast Values:', existingForecasts[forecastIndex]);
+        console.log('Updated Forecast Object:', updatedForecast);
+        router.push(useRoute().params.id);
 
-      router.go(0);
-    } else {
-      console.error('Track not found for update.');
+        const updatedForecastsArray = [...existingForecasts];
+        updatedForecastsArray[forcastIndex] = updatedForecast;
+        const updatedForecastData = {
+          _id: useRoute().params.id,
+          forecast: updatedForecastsArray,
+        };
+
+        console.log('Payload to be sent:', updatedForecastData);
+        const updateResponse = await axios.post(
+          'url/api/get/cyclone/update',
+          updatedForecastData
+        );
+        
+        
+        console.log('Server Response Forecast ID:', updateResponse.data._id);
+        console.log('Hardcoded Response:', { data: 'Updated successfully' });
+        console.log(updateResponse.data);
+        marker.setDraggable(false);
+        exitEditMode();
+        marker.togglePopup();
+
+        router.go(0);
+      } else {
+        console.error('Track not found for update.');
+      }
     }
   } catch (error) {
     console.error('Error updating cyclone:', error);
@@ -200,7 +265,7 @@ await nextTick();
 var emit = defineEmits(["latlng", "mapready"]);
   
   onMounted(async () => {
-  const response = await axios.get("https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/get/" + useRoute().params.id);
+  const response = await axios.get("url/api/get/cyclone/get/" + useRoute().params.id);
   const apiData = response.data;
     data.map = new maplibregl.Map({
       container: "map", 
@@ -343,10 +408,28 @@ var emit = defineEmits(["latlng", "mapready"]);
             }, "indocg"
         );
         const track = apiData.data.track;
-
+        const forecast = apiData.data.forecast;
+        
         console.log(track)
+        console.log(forecast)
 
         track.forEach((point) => {
+          const lngLat = {
+            lng: point.geometry.coordinates[0],
+            lat: point.geometry.coordinates[1],
+          };
+          addMarker(
+            lngLat,
+            point._id,
+            point.properties.date,
+            point.geometry.coordinates[1],
+            point.geometry.coordinates[0],
+            point.properties.meanWind,
+            point.properties.pressure
+          );
+        });
+        forecast.forEach((point) => {
+          console.log('Forecast ID:', point._id);
           const lngLat = {
             lng: point.geometry.coordinates[0],
             lat: point.geometry.coordinates[1],

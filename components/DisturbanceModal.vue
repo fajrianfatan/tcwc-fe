@@ -86,10 +86,15 @@ var data = reactive({
 });
  
 const createDisturbance = async () => {
+  // Validate input fields
+  if (!data.name || !data.area || data.is_current === '') {
+    alert('Please fill in all required fields.');
+    return;
+  }
 
-	disturbanceStore.setFormData(data);
-	showModal.value = false;
-	router.push("/maps/add");
+  disturbanceStore.setFormData(data);
+  showModal.value = false;
+  router.push('/maps/add');
 };
 
 const cancelAdd = () => {

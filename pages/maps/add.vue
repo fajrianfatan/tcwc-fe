@@ -13,7 +13,8 @@
   <script setup>
   import Navbar from "@/components/Navbar/Navbar.vue";
   import TrackType from "@/components/Form/AddTrack.vue";
-  
+  import { useDisturbanceStore } from '~/store';
+
   const coordinates = reactive({
     latitude: "",
     longitude: "",
@@ -24,7 +25,11 @@
     coordinates.longitude = ltlng.longitude;
     
   };
-  
+  const disturbanceStore = useDisturbanceStore();
+    disturbanceStore.loadFormData();
   const mapready = (map) => {};
+  const logFormData = () => {
+    console.log('Form Data:', disturbanceStore.formData);
+  };
   </script>
   

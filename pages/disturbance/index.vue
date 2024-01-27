@@ -129,7 +129,7 @@ const disturbances = ref([]);
 
 const fetchDisturbances = async () => {
   try {
-    const response = await axios.get('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/all/');
+    const response = await axios.get('url/api/get/cyclone/all/');
     if (response.data.status === 'OK') {
       disturbances.value = response.data.data.docs;
     } else {
@@ -153,7 +153,7 @@ const deleteDisturbance = async (disturbanceId) => {
 	const isConfirmed = window.confirm('Apakah anda yakin akan menghapus data ini?');
     if (isConfirmed) {
 		try {
-			const response = await axios.post('https://tropicalcyclone.bmkg.go.id/api-tcwc/tcwc/cyclone/delete', {
+			const response = await axios.post('url/api/get/cyclone/delete', {
 			_id: disturbanceId,
 			});
 
